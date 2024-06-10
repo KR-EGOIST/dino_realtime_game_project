@@ -1,13 +1,19 @@
 import { getGameAssets } from '../init/assets.js';
-import { setStage, getStage } from '../models/stage.model.js';
+import { setStage, getStage, clearStage } from '../models/stage.model.js';
 
 export const gameStart = (uuid, payload) => {
   // 서버 메모리에 있는 게임 에셋에서 stage 정보를 가지고 온다.
   const { stages } = getGameAssets();
+
+  // 스테이지 배열을 초기화하는 함수
+  // 다시 시작하면 이전 정보는 필요없기 때문
+  clearStage(uuid);
+
   // stages 배열에서 0번째 = 첫번째스테이지 의 ID를 해당 유저의 stage에 저장한다.
-  setStage(userUUID, stages.data[0].id);
-  // 로그를 찍어 확인.
-  console.log('Stage:', getStage(userUUID));
+  // 클라이언트에서 현재 시작하는 시간을 받아서 서버에 저장을 할 겁니다.
+  setStage(uuid, stages.data[0].id, payload.timestamp);
+  // 스테이지에 잘 들어갔다 확인
+  console.log('Stage:', getStage(uuid));
 
   return { status: 'success' };
 };

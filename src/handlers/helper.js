@@ -2,6 +2,7 @@
 // 어떤 특정한 기능을 하는 건 아니지만 꼭 필요한 우리에게 도움을 주는 함수
 // 컨텐츠 외에 필수 이벤트 처리 핸들러들이 선언될 파일입니다.
 
+import { createStage } from '../models/stage.model.js';
 import { removeUser, getUsers } from '../models/user.model.js';
 import { CLIENT_VERSION } from '../constants.js';
 import handlerMappings from './handlerMapping.js';
@@ -22,6 +23,8 @@ export const handleConnection = (socket, userUUID) => {
   console.log(`New user connected: ${userUUID} with socket ID ${socket.id}`);
   // 현재 접속중인 유저의 수 출력
   console.log('Current users: ', getUsers());
+
+  createStage(userUUID);
 
   // emit 메서드로 해당 유저에게 메시지를 전달할 수 있다.
   // 현재의 경우 접속하고 나서 생성된 uuid를 바로 전달해주고 있다 (response).
