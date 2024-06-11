@@ -39,10 +39,12 @@ export const moveStageHandler = (userId, payload) => {
   const UnlockItemArr = itemUnlocks.data[UnlockIdx].item_id;
   const maxUnlockItem = Math.max(...UnlockItemArr);
   const maxScoreItem = items.data.find((item) => item.id === maxUnlockItem);
-  const maxScore = payload.score + maxScoreItem.score;
-  const minSocre = payload.score - maxScoreItem.score;
+  const curStage = stages.data.find((stage) => stage.id === payload.targetStage);
+  const maxScore = curStage.score + maxScoreItem.score;
+  const minSocre = curStage.score - maxScoreItem.score;
   // console.log('현재 점수: ', payload.score, ' 최대 점수: ', maxScore, ' 최소 점수: ', minSocre);
-  if (payload.score < minSocre || payload.score > maxScore) {
+  // 오차범위 5점
+  if (payload.score < minSocre - 5 || payload.score > maxScore + 5) {
     return { status: 'fail', message: 'Invalid elapsed time' };
   }
 
