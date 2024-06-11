@@ -28,28 +28,25 @@ export const moveStageHandler = (userId, payload) => {
 
   // targetStage 대한 검증 <- 게임 에셋에 존재하는가?
   // 게임 에셋에서 다음 스테이지의 존재 여부 확인
-  const { stages } = getGameAssets();
+  const { stages, items, itemUnlocks } = getGameAssets();
   if (!stages.data.some((stage) => stage.id === payload.targetStage)) {
     return { status: 'fail', message: 'Target Stage not found' };
   }
 
   // 점수 검증
+  // 현재 스테이지에서 가장 높은 점수의 아이템을 먹었을 때보다 높은 점수로 스테이지를 통과하면 오류
+  const UnlockIdx = itemUnlocks.data.findIndex((data) => data.stage_id === payload.targetStage);
+  const UnlockItemArr = itemUnlocks.data[UnlockIdx].item_id;
+  const maxUnlockItem = Math.max(...UnlockItemArr);
+  const maxScoreItem = items.data.find((item) => item.id === maxUnlockItem);
+  const maxScore = payload.score + maxScoreItem.score;
+  const minSocre = payload.score - maxScoreItem.score;
+  // console.log('현재 점수: ', payload.score, ' 최대 점수: ', maxScore, ' 최소 점수: ', minSocre);
+  if (payload.score < minSocre || payload.score > maxScore) {
+    return { status: 'fail', message: 'Invalid elapsed time' };
+  }
+
   const serverTime = Date.now(); // 현재 타임스탬프
-  // 경과 시간 elapsedTime
-  // 타임스탬프는 ms 로 되어있습니다.
-  // 우리는 1초당 1점이다. 즉, ms 이니까 1/1000초 이므로
-  // (서버시간 - 현재 유저가 있는 스테이지의 타임스탬프) / 1000
-  // const stageIndex = stages.data.findIndex((stage) => stage.id === payload.targetStage);
-  // const elapsedTime =
-  //   ((serverTime - currentStage.timestamp) / 1000) * stages.data[stageIndex - 1].stageScore;
-
-  // const checkScore = stages.data[stageIndex].score - stages.data[stageIndex - 1].score;
-
-  // console.log('체크 점수 : ', checkScore, ' 경과 시간 : ', elapsedTime);
-  // if (elapsedTime < checkScore * 0.9 || elapsedTime > checkScore * 1.1) {
-  //   return { status: 'fail', message: 'Invalid elapsed time' };
-  // }
-
   // 유저의 스테이지 정보 업데이트
   setStage(userId, payload.targetStage, serverTime);
   // 스테이지 정상 변경되었는지 서버 로그 체크
