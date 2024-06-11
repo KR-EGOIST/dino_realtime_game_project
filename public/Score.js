@@ -6,12 +6,13 @@ class Score {
   stageChangeArr = []; // 스테이지 변경 트리거 역할 배열
   myStage = 1000; // 현재 스테이지
 
-  constructor(ctx, scaleRatio, stageJson, itemJson) {
+  constructor(ctx, scaleRatio, stageJson, itemJson, itemController) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
     this.scaleRatio = scaleRatio;
     this.stageJson = stageJson;
     this.itemJson = itemJson;
+    this.itemController = itemController;
 
     this.stageChangeArr = new Array(stageJson.length);
     this.stageChangeArr = this.stageChangeArr.fill(false);
@@ -41,19 +42,23 @@ class Score {
 
         sendEvent(11, { currentStage: currentStage, targetStage: this.myStage });
 
+        this.itemController.updateMyStage(this.myStage);
+
         break;
       }
     }
   }
 
   getItem(itemId) {
-    this.score += 0;
+    const itemIndex = this.itemJson.findIndex((item) => item.id === itemId);
+    this.score += this.itemJson[itemIndex].score;
   }
 
   reset() {
     this.score = 0;
     this.myStage = this.stageJson[0].id;
     this.stageChangeArr = this.stageChangeArr.fill(false);
+    this.itemController.updateMyStage(this.myStage);
   }
 
   setHighScore() {
