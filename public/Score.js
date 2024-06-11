@@ -40,7 +40,7 @@ class Score {
         const currentStage = this.myStage; // 현재 스테이지 임시 저장
         this.myStage = stage.id; // 바뀌는 스테이지가 이제는 내 스테이지
 
-        sendEvent(11, { currentStage: currentStage, targetStage: this.myStage });
+        sendEvent(11, { currentStage: currentStage, targetStage: this.myStage, score: this.score });
 
         this.itemController.updateMyStage(this.myStage);
 
@@ -52,6 +52,7 @@ class Score {
   getItem(itemId) {
     const itemIndex = this.itemJson.findIndex((item) => item.id === itemId);
     this.score += this.itemJson[itemIndex].score;
+    sendEvent(12, { itemId });
   }
 
   reset() {

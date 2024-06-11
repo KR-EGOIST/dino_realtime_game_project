@@ -1,5 +1,6 @@
 import { getGameAssets } from '../init/assets.js';
 import { setStage, getStage, clearStage } from '../models/stage.model.js';
+import { createItem, getItem } from '../models/item.model.js';
 
 export const gameStart = (uuid, payload) => {
   // 서버 메모리에 있는 게임 에셋에서 stage 정보를 가지고 온다.
@@ -8,6 +9,9 @@ export const gameStart = (uuid, payload) => {
   // 스테이지 배열을 초기화하는 함수
   // 다시 시작하면 이전 정보는 필요없기 때문
   clearStage(uuid);
+
+  // 게임 시작시 아이템 배열 초기화
+  createItem(uuid);
 
   // stages 배열에서 0번째 = 첫번째스테이지 의 ID를 해당 유저의 stage에 저장한다.
   // 클라이언트에서 현재 시작하는 시간을 받아서 서버에 저장을 할 겁니다.
@@ -20,9 +24,10 @@ export const gameStart = (uuid, payload) => {
 export const gameEnd = (uuid, payload) => {
   // 클라이언트에서 받은 게임 종료 시 타임스탬프와 총 점수
   // 콜론(:)을 쓰면 이름을 바꿀 수 있습니다. = as 와 같은 의미
-  const { stages: stageJson } = getGameAssets();
+  const { stages: stageJson, items: itemJson } = getGameAssets();
   const { timestamp: gameEndTime, score } = payload;
   const stages = getStage(uuid);
+  const items = getItem(uuid);
 
   if (!stages.length) {
     return { status: 'fail', message: 'No stages found for user' };
@@ -46,9 +51,14 @@ export const gameEnd = (uuid, payload) => {
       ((stageEndTime - stage.timestamp) / 1000) * stageJson.data[index].stageScore;
     // 1초당 1점
     totalScore += stageDuration;
-    console.log('토탈 : ', totalScore, ' 지속시간 : ', stageDuration);
   });
 
+  // 먹은 아이템을 계산하여 총 점수 계산
+  items.forEach((item) => {
+    totalScore += itemJson.data[Object.values(item) - 1].score;
+  });
+
+  console.log('총점 : ', totalScore);
   // 점수와 타임스탬프 검증 (예: 클라이언트가 보낸 총점과 계산된 총점 비교)
   // 오차범위 5
   // 여기서 score 는 클라이언트의 값

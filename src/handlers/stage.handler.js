@@ -1,7 +1,7 @@
 // 유저는 스테이지를 하나씩 올라갈 수 있다. (1스테이지 -> 2, 2 -> 3)
 // 유저는 일정 점수가 되면 다음 스테이지로 이동한다.
 
-import { getStage, setStage, clearStage } from '../models/stage.model.js';
+import { getStage, setStage } from '../models/stage.model.js';
 import { getGameAssets } from '../init/assets.js';
 
 export const moveStageHandler = (userId, payload) => {
@@ -39,16 +39,16 @@ export const moveStageHandler = (userId, payload) => {
   // 타임스탬프는 ms 로 되어있습니다.
   // 우리는 1초당 1점이다. 즉, ms 이니까 1/1000초 이므로
   // (서버시간 - 현재 유저가 있는 스테이지의 타임스탬프) / 1000
-  const elapsedTime = (serverTime - currentStage.timestamp) / 1000;
+  // const stageIndex = stages.data.findIndex((stage) => stage.id === payload.targetStage);
+  // const elapsedTime =
+  //   ((serverTime - currentStage.timestamp) / 1000) * stages.data[stageIndex - 1].stageScore;
 
-  const stageIndex = stages.data.findIndex((stage) => stage.id === payload.targetStage);
-  // console.log('핸들러 : ', stageIndex, ' 서버 점수 : ', elapsedTime);
-  const checkScore =
-    stages.data[stageIndex].socre -
-    stages.data[stageIndex - 1].socre * stages.data[stageIndex - 1].stageScore;
-  if (elapsedTime < checkScore * 0.95 || elapsedTime > checkScore * 1.05) {
-    return { status: 'fail', message: 'Invalid elapsed time' };
-  }
+  // const checkScore = stages.data[stageIndex].score - stages.data[stageIndex - 1].score;
+
+  // console.log('체크 점수 : ', checkScore, ' 경과 시간 : ', elapsedTime);
+  // if (elapsedTime < checkScore * 0.9 || elapsedTime > checkScore * 1.1) {
+  //   return { status: 'fail', message: 'Invalid elapsed time' };
+  // }
 
   // 유저의 스테이지 정보 업데이트
   setStage(userId, payload.targetStage, serverTime);
