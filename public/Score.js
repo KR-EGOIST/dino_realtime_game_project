@@ -3,20 +3,46 @@ import { sendEvent } from './Socket.js';
 class Score {
   score = 0;
   HIGH_SCORE_KEY = 'highScore';
-  stageChange = true;
+  stageChangeArr = []; // 스테이지 변경 트리거 역할 배열
+  myStage = 1000; // 현재 스테이지
 
-  constructor(ctx, scaleRatio) {
+  constructor(ctx, scaleRatio, stageJson, itemJson) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
     this.scaleRatio = scaleRatio;
+    this.stageJson = stageJson;
+    this.itemJson = itemJson;
+
+    this.stageChangeArr = new Array(stageJson.length);
+    this.stageChangeArr = this.stageChangeArr.fill(false);
   }
 
   update(deltaTime) {
-    this.score += deltaTime * 0.001;
-    // 점수가 100점 이상이 될 시 서버에 메세지 전송
-    if (Math.floor(this.score) === 100 && this.stageChange) {
-      this.stageChange = false;
-      sendEvent(11, { currentStage: 1000, targetStage: 1001 });
+    const stageIndex = this.stageJson.findIndex((stage) => stage.id === this.myStage);
+    const nextStageScore = this.stageJson[stageIndex].score;
+    const stageScore = this.stageJson[stageIndex].stageScore;
+
+    // 점수 누적
+    this.score += deltaTime * 0.001 * stageScore;
+    // 점수가 다음 스테이지 목표 점수보다 크거나 같으면 스테이지 변경
+    if (this.score >= nextStageScore) {
+      this.stageChange();
+    }
+  }
+
+  stageChange() {
+    for (let i = 1; i < this.stageJson.length; i++) {
+      const stage = this.stageJson[i];
+
+      if (Math.floor(this.score) >= stage.score && !this.stageChange[i]) {
+        this.stageChange[i] = true;
+        const currentStage = this.myStage; // 현재 스테이지 임시 저장
+        this.myStage = stage.id; // 바뀌는 스테이지가 이제는 내 스테이지
+
+        sendEvent(11, { currentStage: currentStage, targetStage: this.myStage });
+
+        break;
+      }
     }
   }
 
@@ -26,6 +52,8 @@ class Score {
 
   reset() {
     this.score = 0;
+    this.myStage = this.stageJson[0].id;
+    this.stageChangeArr = this.stageChangeArr.fill(false);
   }
 
   setHighScore() {
@@ -55,6 +83,12 @@ class Score {
 
     this.ctx.fillText(scorePadded, scoreX, y);
     this.ctx.fillText(`HI ${highScorePadded}`, highScoreX, y);
+
+    // 스테이지 구분
+    const stageY = 45 * this.scaleRatio;
+    const stageX = this.canvas.width / 2 - 50;
+    const stageText = `스테이지 ${this.myStage - 999}`;
+    this.ctx.fillText(stageText, stageX, stageY);
   }
 }
 

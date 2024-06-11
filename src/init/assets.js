@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // ../../ 이므로 상위 폴더로 2번 이동한 뒤 assets 폴더를 찾아서 들어갑니다.
 // 즉, 최상위 경로 + assets 폴더
-const basePath = path.join(__dirname, '../../assets');
+const basePath = path.join(__dirname, '../../public/assets');
 
 // 비동기 병렬 Promise 의 결과값을 넣어줄 전역 변수
 let gameAssets = {};
