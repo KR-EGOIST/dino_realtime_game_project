@@ -50,10 +50,9 @@ export const moveStageHandler = (userId, payload) => {
     return { status: 'fail', message: 'Invalid elapsed time' };
   }
 
-  // 스테이지 정상 변경되었는지 서버 로그 체크
-  clearStage(userId);
   // 유저의 스테이지 정보 업데이트
   setStage(userId, payload.targetStage, serverTime);
+  // 스테이지 정상 변경되었는지 서버 로그 체크
   console.log('Stage:', getStage(userId));
 
   return { status: 'success' };

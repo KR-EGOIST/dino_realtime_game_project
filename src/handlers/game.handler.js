@@ -20,6 +20,7 @@ export const gameStart = (uuid, payload) => {
 export const gameEnd = (uuid, payload) => {
   // 클라이언트에서 받은 게임 종료 시 타임스탬프와 총 점수
   // 콜론(:)을 쓰면 이름을 바꿀 수 있습니다. = as 와 같은 의미
+  const { stages: stageJson } = getGameAssets();
   const { timestamp: gameEndTime, score } = payload;
   const stages = getStage(uuid);
 
@@ -41,9 +42,11 @@ export const gameEnd = (uuid, payload) => {
       stageEndTime = stages[index + 1].timestamp;
     }
     // 스테이지 지속 시간 (초 단위)
-    const stageDuration = (stageEndTime - stage.timestamp) / 1000;
+    const stageDuration =
+      ((stageEndTime - stage.timestamp) / 1000) * stageJson.data[index].stageScore;
     // 1초당 1점
     totalScore += stageDuration;
+    console.log('토탈 : ', totalScore, ' 지속시간 : ', stageDuration);
   });
 
   // 점수와 타임스탬프 검증 (예: 클라이언트가 보낸 총점과 계산된 총점 비교)

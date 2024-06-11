@@ -43,6 +43,8 @@ const ITEM_CONFIG = [
   { width: 50 / 1.5, height: 50 / 1.5, id: 2, image: 'images/items/pokeball_yellow.png' },
   { width: 50 / 1.5, height: 50 / 1.5, id: 3, image: 'images/items/pokeball_purple.png' },
   { width: 50 / 1.5, height: 50 / 1.5, id: 4, image: 'images/items/pokeball_cyan.png' },
+  { width: 50 / 1.5, height: 50 / 1.5, id: 5, image: 'images/items/pokeball_orange.png' },
+  { width: 50 / 1.5, height: 50 / 1.5, id: 6, image: 'images/items/pokeball_pink.png' },
 ];
 
 // 게임 요소들
@@ -217,6 +219,7 @@ function gameLoop(currentTime) {
     gameover = true;
     score.setHighScore();
     setupGameReset();
+    sendEvent(3, { timestamp: Date.now(), score: Math.floor(score.score) });
   }
   const collideWithItem = itemController.collideWith(player);
   if (collideWithItem && collideWithItem.itemId) {
