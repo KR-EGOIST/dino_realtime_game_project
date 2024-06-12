@@ -28,7 +28,6 @@ export const gameEnd = (uuid, payload) => {
   const { timestamp: gameEndTime, score } = payload;
   const stages = getStage(uuid);
   const items = getItem(uuid);
-  console.log('게임오버 핸들러 : ', items);
 
   if (!stages.length) {
     return { status: 'fail', message: 'No stages found for user' };
