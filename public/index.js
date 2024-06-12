@@ -114,6 +114,7 @@ function createSprites() {
     scaleRatio,
     GROUND_SPEED,
     itemUnlockJson.data,
+    itemJson.data,
   );
 
   score = new Score(ctx, scaleRatio, stageJson.data, itemJson.data, itemController);

@@ -4,27 +4,33 @@
   "data": [
     {
       "id": 1,
-      "score": 2
+      "score": 2,
+      "spawntime": 3000
     },
     {
       "id": 2,
-      "score": 4
+      "score": 4,
+      "spawntime": 3400
     },
     {
       "id": 3,
-      "score": 6
+      "score": 6,
+      "spawntime": 3800
     },
     {
       "id": 4,
-      "score": 8
+      "score": 8,
+      "spawntime": 4200
     },
     {
       "id": 5,
-      "score": 10
+      "score": 10,
+      "spawntime": 4600
     },
     {
       "id": 6,
-      "score": 12
+      "score": 12,
+      "spawntime": 5000
     }
   ]
 }

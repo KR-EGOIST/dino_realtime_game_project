@@ -1,25 +1,29 @@
 import Item from './Item.js';
 
 class ItemController {
-  INTERVAL_MIN = 0;
-  INTERVAL_MAX = 12000;
+  INTERVAL_MIN = 3000;
+  INTERVAL_MAX = 5000;
   myStage = 1000;
   nextInterval = null;
   items = [];
 
-  constructor(ctx, itemImages, scaleRatio, speed, itemUnlockJson) {
+  constructor(ctx, itemImages, scaleRatio, speed, itemUnlockJson, itemJson) {
     this.ctx = ctx;
     this.canvas = ctx.canvas;
     this.itemImages = itemImages;
     this.scaleRatio = scaleRatio;
     this.speed = speed;
     this.itemUnlockJson = itemUnlockJson;
+    this.itemJson = itemJson;
 
     this.setNextItemTime();
   }
 
-  setNextItemTime() {
-    this.nextInterval = this.getRandomNumber(this.INTERVAL_MIN, this.INTERVAL_MAX);
+  setNextItemTime(index) {
+    if (index !== undefined) {
+      const spawnTime = this.itemJson[index].spawntime;
+      this.nextInterval = spawnTime;
+    }
   }
 
   getRandomNumber(min, max) {
@@ -28,6 +32,7 @@ class ItemController {
 
   createItem() {
     const itemUnlockIndex = this.itemUnlockJson.findIndex((data) => data.stage_id === this.myStage);
+
     if (itemUnlockIndex !== -1) {
       const index = this.getRandomNumber(
         0,
@@ -46,8 +51,9 @@ class ItemController {
         itemInfo.height,
         itemInfo.image,
       );
-
       this.items.push(item);
+
+      return index;
     }
   }
 
@@ -57,8 +63,7 @@ class ItemController {
 
   update(gameSpeed, deltaTime) {
     if (this.nextInterval <= 0) {
-      this.createItem();
-      this.setNextItemTime();
+      this.setNextItemTime(this.createItem());
     }
 
     this.nextInterval -= deltaTime;

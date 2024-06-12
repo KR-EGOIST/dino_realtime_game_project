@@ -28,6 +28,7 @@ export const gameEnd = (uuid, payload) => {
   const { timestamp: gameEndTime, score } = payload;
   const stages = getStage(uuid);
   const items = getItem(uuid);
+  console.log('게임오버 핸들러 : ', items);
 
   if (!stages.length) {
     return { status: 'fail', message: 'No stages found for user' };
@@ -52,11 +53,10 @@ export const gameEnd = (uuid, payload) => {
     // 1초당 1점
     totalScore += stageDuration;
   });
-
   // 먹은 아이템을 계산하여 총 점수 계산
-  items.forEach((item) => {
-    totalScore += itemJson.data[Object.values(item) - 1].score;
-  });
+  for (const { item, timestamp } of items) {
+    totalScore += itemJson.data[item - 1].score;
+  }
 
   console.log('총점 : ', totalScore);
   // 점수와 타임스탬프 검증 (예: 클라이언트가 보낸 총점과 계산된 총점 비교)

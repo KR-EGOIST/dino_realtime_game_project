@@ -13,6 +13,6 @@ export const getItem = (uuid) => {
 };
 
 // 유저가 어떤 스테이지에 도착했는지 stages[uuid] 에 스테이지 ID를 객체별로 push
-export const setItem = (uuid, item) => {
-  return items[uuid].push({ item });
+export const setItem = (uuid, item, timestamp) => {
+  return items[uuid].push({ item, timestamp });
 };

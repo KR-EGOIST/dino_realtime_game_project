@@ -51,8 +51,9 @@ class Score {
 
   getItem(itemId) {
     const itemIndex = this.itemJson.findIndex((item) => item.id === itemId);
-    this.score += this.itemJson[itemIndex].score;
-    sendEvent(12, { itemId });
+    const itemScore = this.itemJson[itemIndex].score;
+    this.score += itemScore;
+    sendEvent(12, { itemId, itemScore });
   }
 
   reset() {
