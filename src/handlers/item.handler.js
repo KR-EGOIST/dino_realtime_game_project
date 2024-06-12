@@ -37,7 +37,8 @@ export const dropItemHandler = (userId, payload) => {
   const lastItem = dropItems[dropItems.length - 1];
   if (lastItem) {
     const spawnTime = serverTime - lastItem.timestamp;
-    if (spawnTime < itemJson.data[lastItem.item - 1].spawntime * 0.95) {
+    console.log('스폰 타임: ', spawnTime, ' 검증 기준: ', itemCheck.spawntime);
+    if (spawnTime < itemCheck.spawntime * 0.95) {
       return { status: 'fail', message: 'Item spawn time too short' };
     }
   }
