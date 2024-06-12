@@ -4,8 +4,14 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import initSocket from './init/socket.js';
 import { loadGameAssets } from './init/assets.js';
+import redis from 'redis';
 
 dotenv.config();
+
+const redisClient = redis.createClient({
+  url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  legacyMode: true,
+});
 
 const app = express();
 const server = createServer(app);
@@ -24,6 +30,17 @@ app.use(express.static('public'));
 
 // 서버를 매개변수로 함수 호출
 initSocket(server);
+
+redisClient.on('connect', () => {
+  console.log('Redis client connected');
+});
+
+redisClient.on('error', (err) => {
+  console.log('Redis client error: ', err);
+});
+
+redisClient.connect();
+const redisCli = redisClient.v4;
 
 // 테스트 코드
 app.get('/', (req, res) => {
