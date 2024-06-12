@@ -6,6 +6,7 @@ import { createStage } from '../models/stage.model.js';
 import { removeUser, getUsers } from '../models/user.model.js';
 import { CLIENT_VERSION } from '../constants.js';
 import handlerMappings from './handlerMapping.js';
+import { getHighScore } from '../models/highscore.model.js';
 
 export const handleDisconnect = (socket, uuid) => {
   removeUser(socket.id); // 사용자 삭제
@@ -19,16 +20,16 @@ export const handleDisconnect = (socket, uuid) => {
 // 1스테이지, 0점 -> 1점씩
 // 2스테이지, 1000점 -> 2점씩
 
-export const handleConnection = (socket, userUUID) => {
+export const handleConnection = async (socket, userUUID) => {
   console.log(`New user connected: ${userUUID} with socket ID ${socket.id}`);
   // 현재 접속중인 유저의 수 출력
   console.log('Current users: ', getUsers());
-
+  const highScore = await getHighScore();
+  console.log(highScore);
   createStage(userUUID);
-
   // emit 메서드로 해당 유저에게 메시지를 전달할 수 있다.
   // 현재의 경우 접속하고 나서 생성된 uuid를 바로 전달해주고 있다 (response).
-  socket.emit('connection', { uuid: userUUID });
+  socket.emit('connection', { uuid: userUUID, highScore: highScore || 0 });
 };
 
 // 핸들러를 맵핑하는 객체를 생성했으니 사용을 할 곳이 있어야합니다.

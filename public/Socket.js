@@ -1,5 +1,6 @@
 // 연동하는 코드 작성
 import { CLIENT_VERSION } from './Constants.js';
+import { loadhighScore } from './highsocre.js';
 
 // 소켓에 http://localhost:3000 주소로 연결을 하겠다.
 // io 같은 경우에는 <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script> 라이브러리를 바로 사용할 수 있는 방법입니다.
@@ -26,6 +27,7 @@ socket.on('response', (data) => {
 socket.on('connection', (data) => {
   console.log('connection: ', data);
   userId = data.uuid;
+  loadhighScore(data.highScore);
 });
 
 // event 라는 이름으로 메시지를 보내고

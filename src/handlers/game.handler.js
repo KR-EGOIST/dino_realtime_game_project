@@ -1,6 +1,7 @@
 import { getGameAssets } from '../init/assets.js';
 import { setStage, getStage, clearStage } from '../models/stage.model.js';
 import { createItem, getItem } from '../models/item.model.js';
+import { setHighScore } from '../models/highscore.model.js';
 
 export const gameStart = (uuid, payload) => {
   // 서버 메모리에 있는 게임 에셋에서 stage 정보를 가지고 온다.
@@ -21,7 +22,7 @@ export const gameStart = (uuid, payload) => {
 
   return { status: 'success' };
 };
-export const gameEnd = (uuid, payload) => {
+export const gameEnd = async (uuid, payload) => {
   // 클라이언트에서 받은 게임 종료 시 타임스탬프와 총 점수
   // 콜론(:)을 쓰면 이름을 바꿀 수 있습니다. = as 와 같은 의미
   const { stages: stageJson, items: itemJson } = getGameAssets();
@@ -65,8 +66,9 @@ export const gameEnd = (uuid, payload) => {
     return { status: 'fail', message: 'Score verification failed' };
   }
 
+  const highScore = Math.floor(totalScore);
   // 만약 DB에 저장한다고 가정을 한다면 여기에서 저장할 수 있다.
-  // setResult(userId, score, timestamp)
+  await setHighScore(highScore);
 
   // 모든 검증이 통과된 후, 클라이언트에서 제공한 점수 저장하는 로직
   // saveGameResult(userId, clientScore, gameEndTime);

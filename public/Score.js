@@ -1,4 +1,5 @@
 import { sendEvent } from './Socket.js';
+import { getHighScore } from './highsocre.js';
 
 class Score {
   score = 0;
@@ -63,11 +64,12 @@ class Score {
     this.itemController.updateMyStage(this.myStage);
   }
 
-  setHighScore() {
-    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
+  changeHighScore() {
+    let highScore = getHighScore();
     if (this.score > highScore) {
-      localStorage.setItem(this.HIGH_SCORE_KEY, Math.floor(this.score));
+      highScore = Math.floor(this.score);
     }
+    return highScore;
   }
 
   getScore() {
@@ -75,7 +77,7 @@ class Score {
   }
 
   draw() {
-    const highScore = Number(localStorage.getItem(this.HIGH_SCORE_KEY));
+    const highScore = this.changeHighScore();
     const y = 20 * this.scaleRatio;
 
     const fontSize = 20 * this.scaleRatio;

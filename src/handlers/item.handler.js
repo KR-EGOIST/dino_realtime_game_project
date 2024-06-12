@@ -26,7 +26,11 @@ export const dropItemHandler = (userId, payload) => {
   // 스테이지별 출현하는 아이템인지 검증
   const { id: stageId, timestamp } = stages[stages.length - 1];
   const itemUnlockIdx = itemUnlockJson.data.findIndex((data) => data.stage_id === stageId);
-  const itemUnlockArr = itemUnlockJson.data[itemUnlockIdx].item_id;
+  let itemUnlockArr = [];
+  if (itemUnlockIdx !== -1) {
+    itemUnlockArr = itemUnlockJson.data[itemUnlockIdx].item_id;
+  }
+
   if (!itemUnlockArr.includes(itemId)) {
     return { status: 'fail', message: 'Item not for that stage' };
   }
@@ -37,7 +41,7 @@ export const dropItemHandler = (userId, payload) => {
   const lastItem = dropItems[dropItems.length - 1];
   if (lastItem) {
     const spawnTime = serverTime - lastItem.timestamp;
-    if (spawnTime < itemCheck.spawntime * 0.95) {
+    if (spawnTime < itemCheck.spawntime * 0.9) {
       return { status: 'fail', message: 'Item spawn time too short' };
     }
   }
