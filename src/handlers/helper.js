@@ -12,7 +12,8 @@ export const handleDisconnect = async (socket, uuid) => {
   await removeUser(uuid); // 사용자 삭제
   console.log(`User disconnected: ${uuid}`);
   // 현재 접속중인 유저의 수 출력
-  console.log('Current users: ', getUsers());
+  const users = await getUsers();
+  console.log('Current users: ', users);
 };
 
 // 기획 리마인드

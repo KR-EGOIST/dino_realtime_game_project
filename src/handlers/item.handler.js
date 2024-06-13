@@ -41,11 +41,15 @@ export const dropItemHandler = (userId, payload) => {
   const lastItem = dropItems[dropItems.length - 1];
   if (lastItem) {
     const spawnTime = serverTime - lastItem.timestamp;
-    if (spawnTime < itemCheck.spawntime * 0.9) {
+    if (spawnTime < itemJson.data[lastItem.item - 1].spawntime * 0.9) {
       return { status: 'fail', message: 'Item spawn time too short' };
     }
+  } else {
+    setItem(userId, itemId, serverTime);
+    return { status: 'success', message: 'Item Verification complete' };
   }
 
   setItem(userId, itemId, serverTime);
+
   return { status: 'success', message: 'Item Verification complete' };
 };

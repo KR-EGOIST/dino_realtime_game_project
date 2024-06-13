@@ -1,4 +1,4 @@
-let gameHighScore = '';
+let gameHighScore = 0;
 
 export const loadhighScore = (highScore) => {
   gameHighScore = highScore;
