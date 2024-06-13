@@ -5,6 +5,7 @@ import { createServer } from 'http';
 import initSocket from './init/socket.js';
 import { loadGameAssets } from './init/assets.js';
 import redisClient from './init/redis.js';
+import { clearUsers } from './models/user.model.js';
 
 dotenv.config();
 
@@ -47,7 +48,8 @@ server.listen(PORT, async () => {
     const assets = await loadGameAssets();
     console.log(assets);
     console.log(`Assets loaded successfully`);
-    await redisClient.connect();
+    await redisClient.connect().then(); // redis v4 연결 (비동기)
+    await clearUsers();
   } catch (err) {
     console.log('Failed to load game assets: ', err);
   }

@@ -8,9 +8,9 @@ import { CLIENT_VERSION } from '../constants.js';
 import handlerMappings from './handlerMapping.js';
 import { getHighScore } from '../models/highscore.model.js';
 
-export const handleDisconnect = (socket, uuid) => {
-  removeUser(socket.id); // 사용자 삭제
-  console.log(`User disconnected: ${socket.id}`);
+export const handleDisconnect = async (socket, uuid) => {
+  await removeUser(uuid); // 사용자 삭제
+  console.log(`User disconnected: ${uuid}`);
   // 현재 접속중인 유저의 수 출력
   console.log('Current users: ', getUsers());
 };
@@ -23,7 +23,8 @@ export const handleDisconnect = (socket, uuid) => {
 export const handleConnection = async (socket, userUUID) => {
   console.log(`New user connected: ${userUUID} with socket ID ${socket.id}`);
   // 현재 접속중인 유저의 수 출력
-  console.log('Current users: ', getUsers());
+  const users = await getUsers();
+  console.log('Current users: ', users);
   const highScore = await getHighScore();
   console.log(highScore);
   createStage(userUUID);
