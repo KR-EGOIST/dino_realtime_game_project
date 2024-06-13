@@ -2,17 +2,17 @@
 // value:array 에는 stageId를 가진 객체가 들어갑니다.
 const items = {};
 
-// 스테이지 초기화
+// 아이템 초기화
 export const createItem = (uuid) => {
-  items[uuid] = []; // 초기 스테이지 배열 생성
+  items[uuid] = []; // 초기 아이템 배열 생성
 };
 
-// 현재 유저가 어느 정도까지 왔는지 stages[uuid] 해서 유저의 배열을 조회
+// 현재 유저가 어느 아이템을 획득했는지 items[uuid] 해서 유저의 아이템 획득 목록 조회
 export const getItem = (uuid) => {
   return items[uuid];
 };
 
-// 유저가 어떤 스테이지에 도착했는지 stages[uuid] 에 스테이지 ID를 객체별로 push
+// 유저가 어떤 아이템을 획득했는지 items[uuid] 에 아이템 ID를 객체별로 push
 export const setItem = (uuid, item, timestamp) => {
   return items[uuid].push({ item, timestamp });
 };

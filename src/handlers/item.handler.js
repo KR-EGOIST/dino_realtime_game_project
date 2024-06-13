@@ -36,7 +36,6 @@ export const dropItemHandler = (userId, payload) => {
   }
 
   // 아이템 획득 시간간격 검증
-  // 처음 아이템 획득시 undefined 이므로 if 문으로 묶어줌
   const dropItems = getItem(userId);
   const lastItem = dropItems[dropItems.length - 1];
   if (lastItem) {
