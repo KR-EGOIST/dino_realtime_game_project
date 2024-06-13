@@ -46,7 +46,6 @@ server.listen(PORT, async () => {
   // 이 곳에서 파일 읽음
   try {
     const assets = await loadGameAssets();
-    console.log(assets);
     console.log(`Assets loaded successfully`);
     await redisClient.connect().then(); // redis v4 연결 (비동기)
     await clearUsers();

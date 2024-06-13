@@ -10,10 +10,6 @@ import { getHighScore } from '../models/highscore.model.js';
 
 export const handleDisconnect = async (socket, uuid) => {
   await removeUser(uuid); // 사용자 삭제
-  console.log(`User disconnected: ${uuid}`);
-  // 현재 접속중인 유저의 수 출력
-  const users = await getUsers();
-  console.log('Current users: ', users);
 };
 
 // 기획 리마인드
@@ -27,7 +23,6 @@ export const handleConnection = async (socket, userUUID) => {
   const users = await getUsers();
   console.log('Current users: ', users);
   const highScore = await getHighScore();
-  console.log(highScore);
   createStage(userUUID);
   // emit 메서드로 해당 유저에게 메시지를 전달할 수 있다.
   // 현재의 경우 접속하고 나서 생성된 uuid를 바로 전달해주고 있다 (response).
