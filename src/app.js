@@ -12,7 +12,8 @@ dotenv.config();
 const app = express();
 const server = createServer(app);
 
-const PORT = process.env.PORT;
+const PORT = 3000;
+// const PORT = process.env.PORT;
 
 app.use(express.json());
 // bodyParser 라는 친구 , url 인코딩 해주는 함수
