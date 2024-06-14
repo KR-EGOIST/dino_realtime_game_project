@@ -8,7 +8,7 @@ socket.on 을 하면 하나의 유저를 대상으로 한 이벤트가 처리됩
 
 // uuid 를 생성하는 모듈 uuid , npm i uuid
 import { v4 as uuidv4 } from 'uuid';
-import { addUser } from '../models/user.model.js';
+import { addUser, getUserById } from '../models/user.model.js';
 import { handleDisconnect, handleConnection, handleEvent } from './helper.js';
 
 const registerHandler = async (io) => {
@@ -18,8 +18,7 @@ const registerHandler = async (io) => {
     // 최초 커넥션을 맺은 이후 발생하는 각종 이벤트를 처리하는 곳
 
     // 유저를 등록한다. , 유저가 서버에 접속한 경우
-    const userUUID = uuidv4();
-    // socket.id 인자로 들어오는 socket 이 id를 가지고 있습니다.
+    const userUUID = socket.handshake.query.uuid != 'null' ? socket.handshake.query.uuid : uuidv4();
     await addUser({ uuid: userUUID, socketId: socket.id });
 
     // 접속시 유저 정보 생성 이벤트 처리

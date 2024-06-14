@@ -1,7 +1,7 @@
 import { getGameAssets } from '../init/assets.js';
 import { setStage, getStage, clearStage } from '../models/stage.model.js';
 import { createItem, getItem } from '../models/item.model.js';
-import { setHighScore } from '../models/highscore.model.js';
+import { setHighScore, getHighScore } from '../models/highscore.model.js';
 
 export const gameStart = (uuid, payload) => {
   const { stages } = getGameAssets();
@@ -17,7 +17,7 @@ export const gameStart = (uuid, payload) => {
 
   return { status: 'success' };
 };
-export const gameEnd = async (uuid, payload) => {
+export const gameEnd = async (uuid, payload, io) => {
   const { stages: stageJson, items: itemJson } = getGameAssets();
   const { timestamp: gameEndTime, score } = payload;
   const stages = getStage(uuid);
@@ -60,8 +60,13 @@ export const gameEnd = async (uuid, payload) => {
   }
 
   const highScore = Math.floor(totalScore);
+  const lastScore = await getHighScore();
+  console.log(lastScore, highScore);
+  if (lastScore < highScore) {
+    await setHighScore(highScore);
 
-  await setHighScore(highScore);
+    io.emit('response', { highScore: highScore });
+  }
 
   return { status: 'success', message: 'Game ended successfully', score };
 };

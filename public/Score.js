@@ -65,11 +65,7 @@ class Score {
   }
 
   changeHighScore() {
-    let highScore = getHighScore();
-    if (this.score > highScore) {
-      highScore = Math.floor(this.score);
-    }
-    return highScore;
+    const highScore = Number(getHighScore());
   }
 
   getScore() {
@@ -77,7 +73,7 @@ class Score {
   }
 
   draw() {
-    const highScore = this.changeHighScore();
+    const highScore = Number(getHighScore());
     const y = 20 * this.scaleRatio;
 
     const fontSize = 20 * this.scaleRatio;

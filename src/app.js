@@ -28,14 +28,6 @@ app.use(express.static('public'));
 // 서버를 매개변수로 함수 호출
 initSocket(server);
 
-redisClient.on('connect', () => {
-  console.log('Redis client connected');
-});
-
-redisClient.on('error', (err) => {
-  console.log('Redis client error: ', err);
-});
-
 // 테스트 코드
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');

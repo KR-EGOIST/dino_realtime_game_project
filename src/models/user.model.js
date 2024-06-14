@@ -35,6 +35,12 @@ export const getUsers = async () => {
   return users;
 };
 
+// 사용자 조회
+export const getUserById = async (uuid) => {
+  const user = await redisClient.get(`${USER_KEY}:${uuid}`);
+  return user ? JSON.parse(user) : null;
+};
+
 // 유저 데이터 청소
 export const clearUsers = async () => {
   const keys = await redisCli.keys(`${USER_KEY}:*`);

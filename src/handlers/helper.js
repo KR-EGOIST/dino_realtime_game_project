@@ -9,7 +9,7 @@ import handlerMappings from './handlerMapping.js';
 import { getHighScore } from '../models/highscore.model.js';
 
 export const handleDisconnect = async (socket, uuid) => {
-  await removeUser(uuid); // 사용자 삭제
+  // await removeUser(uuid); // 사용자 삭제
 };
 
 export const handleConnection = async (socket, userUUID) => {
@@ -41,12 +41,7 @@ export const handleEvent = (io, socket, data) => {
   }
 
   // 적절한 핸들러에 userID 와 payload를 전달하고 결과를 받습니다.
-  const response = handler(data.userId, data.payload);
-  // 만약 결과에 broadcast (모든 유저에게 전달)이 있다면 broadcast 합니다.
-  if (response.broadcast) {
-    io.emit('response', 'broadcast');
-    return;
-  }
+  const response = handler(data.userId, data.payload, io);
   // 해당 유저에게 적절한 response를 전달합니다.
   socket.emit('response', response);
 };
