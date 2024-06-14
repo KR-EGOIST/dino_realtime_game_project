@@ -9,4 +9,12 @@ const redisClient = redis.createClient({
   legacyMode: true,
 });
 
+redisClient.on('connect', () => {
+  console.log('Redis client connected');
+});
+
+redisClient.on('error', (err) => {
+  console.log('Redis client error: ', err);
+});
+
 export default redisClient;
