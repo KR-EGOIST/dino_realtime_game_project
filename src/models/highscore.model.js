@@ -14,5 +14,5 @@ export const setHighScore = async (score) => {
 
 export const getHighScore = async () => {
   const highScore = await redisCli.get(`${HIGH_SCORE_KEY}`);
-  return highScore;
+  return highScore || 0;
 };
